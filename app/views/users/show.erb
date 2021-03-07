@@ -1,0 +1,9 @@
+<h1>Tweets from </h1>
+
+<ul>
+<% @tweets.all.each do |tweet| %>
+    <% if tweet.user = @user %>
+    <li><%= tweet.content %></li>
+    <% end %>
+    <% end %>
+</ul>

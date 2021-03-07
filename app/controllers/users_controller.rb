@@ -1,43 +1,54 @@
 class UsersController < ApplicationController
 
-    
       get '/signup' do
-        if current_user
-          redirect "/tweets"
+        if !current_user
+          erb :'users/create_user'
+        else
+          redirect to "/tweets"
         end
-        erb :'users/create_user'
       end
     
       post '/signup' do
-        user = User.create(params[:user])
-        if user.id
-          session[:user_id] = user.id
-          redirect "/tweets"
+        if params[:username] == "" || params[:email] == "" || params[:password] == ""
+          redirect '/signup'
         else
-          redirect "/signup"
+          @user = User.create(params[:user])
+          session[:user_id] = @user.id
+          redirect to '/tweets'
         end
       end
     
       get '/logout' do
         session.clear
-        redirect '/'
+        redirect '/login'
       end
+
     
       get '/login' do
-        if session[:user_id]
-          redirect "/users/#{session[:user_id]}"
+        if !current_user
+          erb :'users/login'
+        else
+          redirect to "/tweets"
         end
-        erb :'users/login'
       end
     
       post '/login' do
-        user = User.find_by(name: params[:user][:name])
+        user = User.find_by(username: params[:user][:username])
         if user && user.authenticate(params[:user][:password])
           session[:user_id] = user.id
-          redirect "/users/#{user.id}"
+          redirect "/tweets"
         else
-          flash[:message] = "Incorrect username or password"
-          redirect 'users/login'
+          redirect 'users/signup'
+        end
+      end
+
+      get '/users/:slug' do
+        if current_user
+          @user = User.find_by_slug(params[:slug])
+          @tweets = Tweet.all
+          erb :"users/#{@user.slug}"
+        else
+          redirect '/login'
         end
       end
     

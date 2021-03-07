@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
 
       get '/signup' do
+        binding.pry
         if !current_user
           erb :'users/create_user'
         else
@@ -46,7 +47,7 @@ class UsersController < ApplicationController
         if current_user
           @user = User.find_by_slug(params[:slug])
           @tweets = Tweet.all
-          erb :"users/#{@user.slug}"
+          erb :'users/show'
         else
           redirect '/login'
         end

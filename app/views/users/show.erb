@@ -1,9 +1,5 @@
-<h1>Tweets from </h1>
+<h1>Tweets</h1>
 
-<ul>
-<% @tweets.all.each do |tweet| %>
-    <% if tweet.user = @user %>
-    <li><%= tweet.content %></li>
+<% @user_tweets.each do |tweet| %>
+    <div><%= tweet.content %></div>
     <% end %>
-    <% end %>
-</ul>
